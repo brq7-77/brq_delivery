@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { adminLogin } from "../api";
+import { supabase } from "../supabaseClient";
 import toast from "react-hot-toast";
 
 export default function AdminLogin({ onLogin, onBack }) {
@@ -9,19 +9,50 @@ export default function AdminLogin({ onLogin, onBack }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const data = await adminLogin(identifier, password);
+    const cleanIdentifier = identifier.trim();
+    const cleanPassword = password.trim();
 
-    if (!data.success) {
-      toast.error(data.message || "Login failed");
+    console.log("LOGIN TRY:", cleanIdentifier, cleanPassword);
+
+    const { data, error } = await supabase
+      .from("supervisors")
+      .select("*");
+
+    console.log("SUPERVISORS:", data, error);
+
+    if (error) {
+      toast.error("Database error");
       return;
     }
 
-    localStorage.setItem("brq_admin_token", data.token);
-    localStorage.setItem("brq_admin_user", JSON.stringify(data.user));
+    const userRow = data?.find(
+      (u) =>
+        u.active === true &&
+        (u.username === cleanIdentifier || u.email === cleanIdentifier) &&
+        u.password === cleanPassword
+    );
+
+    console.log("FOUND USER:", userRow);
+
+    if (!userRow) {
+      toast.error("Wrong username or password");
+      return;
+    }
+
+    const user = {
+      id: userRow.id,
+      name: userRow.name,
+      username: userRow.username,
+      email: userRow.email,
+      role: userRow.role,
+      active: userRow.active,
+    };
+
+    localStorage.setItem("brq_admin_token", "supabase-local-token");
+    localStorage.setItem("brq_admin_user", JSON.stringify(user));
 
     toast.success("Welcome back commander");
-
-    onLogin(data.user);
+    onLogin(user);
   }
 
   return (

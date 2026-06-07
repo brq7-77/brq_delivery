@@ -217,15 +217,15 @@ export default function AdminSupervisors() {
         ))}
       </div>
       <ConfirmModal
-  open={!!deleteTarget}
-  title="Delete Supervisor?"
-  message={`Are you sure you want to delete ${deleteTarget?.name}? This action cannot be undone.`}
-  confirmText="Delete"
-  cancelText="Cancel"
-  danger={true}
-  onCancel={() => setDeleteTarget(null)}
-  onConfirm={() => removeUser(deleteTarget.id)}
-/>
+        open={!!deleteTarget}
+        title="Delete Supervisor?"
+        message={`Are you sure you want to delete ${deleteTarget?.name}? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        danger={true}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={() => removeUser(deleteTarget.id)}
+      />
     </div>
   );
 }

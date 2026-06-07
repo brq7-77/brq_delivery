@@ -264,7 +264,17 @@ export default function AdminProducts() {
                 className={`product-control-card ${!item.active ? "is-disabled" : ""}`}
                 key={item.id}
               >
-                <img className="product-control-img" src={item.image} alt={item.name} />
+                {item.image ? (
+                  <img
+                    className="product-control-img"
+                    src={item.image}
+                    alt={item.name}
+                  />
+                ) : (
+                  <div className="product-control-img image-placeholder">
+                    <i className="fa-solid fa-burger"></i>
+                  </div>
+                )}
 
                 <div className="product-control-info">
                   <h3>{item.name}</h3>

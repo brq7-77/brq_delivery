@@ -3168,3 +3168,19 @@ button:active {
 .coupon-applied i {
   margin-right: 8px;
 }
+
+.image-placeholder {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.image-placeholder i {
+  font-size: 4rem;
+  color: #7000ff;
+}

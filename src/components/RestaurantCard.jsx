@@ -1,7 +1,14 @@
 export default function RestaurantCard({ restaurant, onOpen }) {
   return (
     <article className="restaurant-card" onClick={() => onOpen(restaurant)}>
-      <img src={restaurant.image} alt={restaurant.name} />
+
+      {restaurant.image ? (
+        <img src={restaurant.image} alt={restaurant.name} />
+      ) : (
+        <div className="restaurant-placeholder">
+          <i className="fa-solid fa-store"></i>
+        </div>
+      )}
 
       <div className="restaurant-card-content">
         <div>

@@ -22,16 +22,14 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
   if (!open) return null;
 
   const subtotal = items.reduce(
-    (total, item) => total + item.price * item.qty,
+    (total, item) => total + Number(item.price || 0) * Number(item.qty || 1),
     0
   );
 
-  const delivery =
-    items.length > 0 && orderType === "delivery" ? 2.5 : 0;
-
+  const delivery = items.length > 0 && orderType === "delivery" ? 2.5 : 0;
   const taxes = items.length > 0 ? 1.2 : 0;
-
-  const total = Math.max(0, subtotal + delivery + taxes - discount);
+  const safeDiscount = Number(discount || 0);
+  const total = Math.max(0, subtotal + delivery + taxes - safeDiscount);
 
   async function applyCoupon() {
     if (!couponCode.trim()) {
@@ -48,8 +46,19 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
       return;
     }
 
-    setAppliedCoupon(data.coupon);
-    setDiscount(data.discount);
+    const coupon = data.coupon;
+    let calculatedDiscount = 0;
+
+    if (coupon.type === "percent") {
+      calculatedDiscount = subtotal * (Number(coupon.value || 0) / 100);
+    } else if (coupon.type === "fixed") {
+      calculatedDiscount = Number(coupon.value || 0);
+    } else if (coupon.type === "free_delivery") {
+      calculatedDiscount = delivery;
+    }
+
+    setAppliedCoupon(coupon);
+    setDiscount(calculatedDiscount);
     notifySuccess("Coupon applied successfully");
   }
 
@@ -74,7 +83,7 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
       taxes,
       total,
       coupon: appliedCoupon,
-      discount,
+      discount: safeDiscount,
       status: "pending",
       createdAt: new Date().toISOString(),
     });
@@ -186,16 +195,24 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
             <div className="checkout-items">
               {items.map((item) => (
                 <div className="checkout-item" key={item.id}>
-                  <img src={item.image} alt={item.name} />
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} />
+                  ) : (
+                    <div className="checkout-item-placeholder">
+                      <i className="fa-solid fa-burger"></i>
+                    </div>
+                  )}
 
                   <div>
                     <h4>{item.name}</h4>
                     <p>
-                      {item.qty} × ${item.price.toFixed(2)}
+                      {item.qty} × ${Number(item.price || 0).toFixed(2)}
                     </p>
                   </div>
 
-                  <strong>${(item.price * item.qty).toFixed(2)}</strong>
+                  <strong>
+                    ${(Number(item.price || 0) * Number(item.qty || 1)).toFixed(2)}
+                  </strong>
                 </div>
               ))}
             </div>
@@ -235,12 +252,12 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
                 <strong>${taxes.toFixed(2)}</strong>
               </div>
 
-              {discount > 0 && (
-                  <div>
-                    <span>Discount</span>
-                    <strong>-${discount.toFixed(2)}</strong>
-                  </div>
-               )}
+              {safeDiscount > 0 && (
+                <div>
+                  <span>Discount</span>
+                  <strong>-${safeDiscount.toFixed(2)}</strong>
+                </div>
+              )}
 
               <div className="total-row">
                 <span>Total</span>

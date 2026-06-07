@@ -11,7 +11,13 @@ export default function ProductModal({ item, onClose, onAdd }) {
         </button>
 
         <div className="modal-image">
-          <img src={item.image} alt={item.name} />
+          {item.image ? (
+            <img src={item.image} alt={item.name} />
+          ) : (
+            <div className="image-placeholder">
+              <i className="fa-solid fa-burger"></i>
+            </div>
+          )}
         </div>
 
         <div className="modal-content">

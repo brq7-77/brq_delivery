@@ -1,4 +1,4 @@
-export default function AdminOrders({ orders, onUpdateStatus }) {
+export default function AdminOrders({ orders = [], onUpdateStatus }) {
   const statuses = ["pending", "preparing", "on the way", "delivered"];
 
   return (
@@ -18,57 +18,51 @@ export default function AdminOrders({ orders, onUpdateStatus }) {
         </div>
       ) : (
         <div className="orders-grid">
-          {orders.map((order) => (
-            <article className="order-card" key={order.id}>
-              <div className="order-top">
-                <div>
-                  <h3>{order.customer.name}</h3>
-                  <p>{order.customer.phone}</p>
+          {orders.map((order) => {
+            const customerName = order.customerName || order.customer?.name || "Unknown";
+            const phone = order.phone || order.customer?.phone || "No phone";
+            const address = order.address || order.customer?.address || "No address";
+            const payment = order.payment || order.customer?.payment || "cash";
+
+            return (
+              <article className="order-card" key={order.id}>
+                <div className="order-top">
+                  <div>
+                    <h3>{customerName}</h3>
+                    <p>{phone}</p>
+                  </div>
+
+                  <span className={`status ${(order.status || "pending").replaceAll(" ", "-")}`}>
+                    {order.status || "pending"}
+                  </span>
                 </div>
 
-                <span className={`status ${order.status.replaceAll(" ", "-")}`}>
-                  {order.status}
-                </span>
-              </div>
+                <div className="order-info">
+                  <p><i className="fa-solid fa-location-dot"></i>{address}</p>
+                  <p><i className="fa-solid fa-money-bill"></i>${Number(order.total || 0).toFixed(2)}</p>
+                  <p><i className="fa-solid fa-credit-card"></i>{payment}</p>
+                </div>
 
-              <div className="order-info">
-                <p>
-                  <i className="fa-solid fa-location-dot"></i>
-                  {order.customer.address}
-                </p>
+                <div className="order-items">
+                  {(order.items || []).map((item, index) => (
+                    <div key={item.id || index}>
+                      <span>{item.name}</span>
+                      <strong>x{item.qty || 1}</strong>
+                    </div>
+                  ))}
+                </div>
 
-                <p>
-                  <i className="fa-solid fa-money-bill"></i>
-                  ${order.total.toFixed(2)}
-                </p>
-
-                <p>
-                  <i className="fa-solid fa-credit-card"></i>
-                  {order.customer.payment}
-                </p>
-              </div>
-
-              <div className="order-items">
-                {order.items.map((item) => (
-                  <div key={item.id}>
-                    <span>{item.name}</span>
-                    <strong>x{item.qty}</strong>
-                  </div>
-                ))}
-              </div>
-
-              <select
-                value={order.status}
-                onChange={(e) => onUpdateStatus(order.id, e.target.value)}
-              >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </article>
-          ))}
+                <select
+                  value={order.status || "pending"}
+                  onChange={(e) => onUpdateStatus(order.id, e.target.value)}
+                >
+                  {statuses.map((status) => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
+                </select>
+              </article>
+            );
+          })}
         </div>
       )}
     </div>

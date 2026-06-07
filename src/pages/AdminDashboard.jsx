@@ -1,5 +1,5 @@
-export default function AdminDashboard({ orders }) {
-  const revenue = orders.reduce((sum, order) => sum + order.total, 0);
+export default function AdminDashboard({ orders = [] }) {
+  const revenue = orders.reduce((sum, order) => sum + Number(order.total || 0), 0);
   const pending = orders.filter((order) => order.status === "pending").length;
   const delivered = orders.filter((order) => order.status === "delivered").length;
 
@@ -42,9 +42,9 @@ export default function AdminDashboard({ orders }) {
         ) : (
           orders.slice(0, 5).map((order) => (
             <div className="admin-row" key={order.id}>
-              <span>{order.customer.name}</span>
-              <strong>${order.total.toFixed(2)}</strong>
-              <em>{order.status}</em>
+              <span>{order.customerName || order.customer?.name || "Unknown Customer"}</span>
+              <strong>${Number(order.total || 0).toFixed(2)}</strong>
+              <em>{order.status || "pending"}</em>
             </div>
           ))
         )}

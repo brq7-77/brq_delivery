@@ -2,7 +2,13 @@ export default function ProductCard({ item, onAdd, onOpen }) {
   return (
     <article className="product-card" onClick={() => onOpen(item)}>
       <div className="product-image">
-        <img src={item.image} alt={item.name} />
+        {item.image ? (
+          <img src={item.image} alt={item.name} />
+        ) : (
+          <div className="product-placeholder">
+            <i className="fa-solid fa-burger"></i>
+          </div>
+        )}
       </div>
 
       <div className="product-info">
