@@ -4,6 +4,7 @@ export default function Header({
   cartCount,
   onCartClick,
   onAdminClick,
+  onDriverClick,
   onTrackClick,
 }) {
   const { language, changeLanguage, t } = useLanguage();
@@ -36,6 +37,14 @@ export default function Header({
         <button className="cart-button" onClick={onCartClick}>
           <i className="fa-solid fa-bag-shopping"></i>
           {cartCount > 0 && <span>{cartCount}</span>}
+        </button>
+
+        <button
+          className="nav-link"
+          onClick={onDriverClick}
+        >
+          <i className="fa-solid fa-motorcycle"></i>
+          Driver
         </button>
 
         <button className="nav-link" onClick={onAdminClick}>

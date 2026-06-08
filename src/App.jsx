@@ -17,6 +17,7 @@ import AdminLogin from "./pages/AdminLogin";
 import RestaurantsSection from "./components/RestaurantsSection";
 import { getRestaurants } from "./api";
 import { useLanguage } from "./i18n/LanguageContext";
+import Driver from "./pages/Driver";
 
 import {
   createOrder,
@@ -159,37 +160,87 @@ export default function App() {
 
   if (pageMode === "admin" && !adminUser) {
     return (
-        <div className="app">
+      <div className="app">
         <AdminLogin
-            onLogin={setAdminUser}
-            onBack={() => setPageMode("home")}
+          onLogin={(user) => {
+            setAdminUser(user);
+
+            if (user.role === "Driver") {
+              setPageMode("driver");
+            } else {
+              setPageMode("admin");
+            }
+          }}
+          onBack={() => setPageMode("home")}
         />
-        </div>
+      </div>
     );
+  }
+
+  if (pageMode === "admin" && adminUser) {
+    if (adminUser.role === "Driver") {
+      return (
+        <div className="app">
+          <Driver
+            orders={orders}
+            onBack={() => setPageMode("home")}
+            onUpdateStatus={updateOrderStatus}
+          />
+        </div>
+      );
     }
 
-    if (pageMode === "admin" && adminUser) {
     return (
-        <div className="app">
+      <div className="app">
         <Admin
-            orders={orders}
-                onBack={() => {
-                    localStorage.removeItem("brq_admin_token");
-                    localStorage.removeItem("brq_admin_user");
-
-                    setAdminUser(null);
-                    setPageMode("home");
-                }}
-              adminUser={adminUser}
-                    onLogout={() => {
-                    localStorage.removeItem("brq_admin_token");
-                    localStorage.removeItem("brq_admin_user");
-                    setAdminUser(null);
-                    setPageMode("home");
-                }}
-            onUpdateStatus={updateOrderStatus}
+          orders={orders}
+          onBack={() => {
+            localStorage.removeItem("brq_admin_token");
+            localStorage.removeItem("brq_admin_user");
+            setAdminUser(null);
+            setPageMode("home");
+          }}
+          adminUser={adminUser}
+          onLogout={() => {
+            localStorage.removeItem("brq_admin_token");
+            localStorage.removeItem("brq_admin_user");
+            setAdminUser(null);
+            setPageMode("home");
+          }}
+          onUpdateStatus={updateOrderStatus}
         />
-        </div>
+      </div>
+    );
+  }
+
+  if (pageMode === "driver" && !adminUser) {
+    return (
+      <div className="app">
+        <AdminLogin
+          onLogin={(user) => {
+            if (!["Owner", "Manager", "Driver"].includes(user.role)) {
+              notifyError("You are not allowed to access driver panel.");
+              return;
+            }
+
+            setAdminUser(user);
+            setPageMode("driver");
+          }}
+          onBack={() => setPageMode("home")}
+        />
+      </div>
+    );
+  }
+
+  if (pageMode === "driver" && adminUser) {
+    return (
+      <div className="app">
+        <Driver
+          orders={orders}
+          onBack={() => setPageMode("home")}
+          onUpdateStatus={updateOrderStatus}
+        />
+      </div>
     );
   }
 
@@ -199,12 +250,13 @@ export default function App() {
         cartCount={cartCount}
         onCartClick={() => setCartOpen(true)}
         onAdminClick={() => setPageMode("admin")}
+        onDriverClick={() => setPageMode("driver")}
         onTrackClick={() => {
-            if (latestOrder) {
-                setTrackingOpen(true);
-            } else {
-                notifyError(t.noOrderToTrack);
-            }
+          if (latestOrder) {
+            setTrackingOpen(true);
+          } else {
+            notifyError(t.noOrderToTrack);
+          }
         }}
       />
 
@@ -240,6 +292,40 @@ export default function App() {
                 <i className="fa-solid fa-arrow-left"></i>
                 {t.backToRestaurants}
             </button>
+          )}
+
+          {selectedRestaurant && (
+            <div className="restaurant-hero-box">
+              {selectedRestaurant.image ? (
+                <img src={selectedRestaurant.image} alt={selectedRestaurant.name} />
+              ) : (
+                <div className="restaurant-hero-placeholder">
+                  <i className="fa-solid fa-store"></i>
+                </div>
+              )}
+
+              <div>
+                <h2>{selectedRestaurant.name}</h2>
+                <p>{selectedRestaurant.description}</p>
+
+                <div className="restaurant-hero-meta">
+                  <span>
+                    <i className="fa-solid fa-star"></i>
+                    {Number(selectedRestaurant.rating || 0).toFixed(1)}
+                  </span>
+
+                  <span>
+                    <i className="fa-solid fa-clock"></i>
+                    {selectedRestaurant.deliveryTime}
+                  </span>
+
+                  <span>
+                    <i className="fa-solid fa-burger"></i>
+                    {filteredItems.length} {t.items}
+                  </span>
+                </div>
+              </div>
+            </div>
           )}
 
           <CategoryBar

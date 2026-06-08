@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { canAccess } from "../utils/permissions";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminDashboard from "./AdminDashboard";
@@ -13,6 +14,23 @@ import AdminCoupons from "./AdminCoupons";
 export default function Admin({ orders, onBack, onUpdateStatus, adminUser, onLogout }) {
   const [activePage, setActivePage] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const previousOrdersCount = useRef(orders.length);
+
+  useEffect(() => {
+    if (orders.length > previousOrdersCount.current) {
+      toast.success("New order received!");
+
+      const audio = new Audio(
+        "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
+      );
+
+      audio.volume = 0.5;
+      audio.play().catch(() => {});
+    }
+
+    previousOrdersCount.current = orders.length;
+  }, [orders.length]);
 
   return (
     <main className="admin-shell">
