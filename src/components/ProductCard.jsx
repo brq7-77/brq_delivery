@@ -1,4 +1,8 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 export default function ProductCard({ item, onAdd, onOpen }) {
+  const { t } = useLanguage();
+
   return (
     <article className="product-card" onClick={() => onOpen(item)}>
       <div className="product-image">
@@ -23,7 +27,7 @@ export default function ProductCard({ item, onAdd, onOpen }) {
         <p>{item.description}</p>
 
         <div className="product-bottom">
-          <strong>${item.price.toFixed(2)}</strong>
+          <strong>${Number(item.price || 0).toFixed(2)}</strong>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -31,7 +35,7 @@ export default function ProductCard({ item, onAdd, onOpen }) {
             }}
           >
             <i className="fa-solid fa-plus"></i>
-            Add
+            {t.add}
           </button>
         </div>
       </div>

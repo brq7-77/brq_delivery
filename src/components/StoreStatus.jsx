@@ -1,26 +1,39 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 export default function StoreStatus({ orderType, onChangeOrderType }) {
+  const { t } = useLanguage();
+
   return (
     <section className="store-status">
       <div className="status-card open">
         <i className="fa-solid fa-store"></i>
         <div>
-          <span>Status</span>
-          <strong>Open Now</strong>
+          <span>{t.status}</span>
+          <strong>{t.openNow}</strong>
         </div>
       </div>
 
       <div className="status-card">
         <i className="fa-solid fa-clock"></i>
         <div>
-          <span>{orderType === "delivery" ? "Delivery Time" : "Pickup Time"}</span>
-          <strong>{orderType === "delivery" ? "25-35 min" : "10-15 min"}</strong>
+          <span>
+            {orderType === "delivery"
+              ? t.deliveryTime
+              : t.pickupTime}
+          </span>
+
+          <strong>
+            {orderType === "delivery"
+              ? "25-35 min"
+              : "10-15 min"}
+          </strong>
         </div>
       </div>
 
       <div className="status-card">
         <i className="fa-solid fa-basket-shopping"></i>
         <div>
-          <span>Minimum Order</span>
+          <span>{t.minimumOrder}</span>
           <strong>$5.00</strong>
         </div>
       </div>
@@ -31,7 +44,7 @@ export default function StoreStatus({ orderType, onChangeOrderType }) {
           onClick={() => onChangeOrderType("delivery")}
         >
           <i className="fa-solid fa-motorcycle"></i>
-          Delivery
+          {t.delivery}
         </button>
 
         <button
@@ -39,7 +52,7 @@ export default function StoreStatus({ orderType, onChangeOrderType }) {
           onClick={() => onChangeOrderType("pickup")}
         >
           <i className="fa-solid fa-bag-shopping"></i>
-          Pickup
+          {t.pickup}
         </button>
       </div>
     </section>

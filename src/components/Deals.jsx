@@ -1,19 +1,23 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 export default function Deals() {
+  const { t } = useLanguage();
+
   const deals = [
     {
       icon: "fa-truck-fast",
-      title: "Free Delivery",
-      text: "On orders above $25",
+      title: t.freeDelivery,
+      text: t.onOrdersAbove,
     },
     {
       icon: "fa-burger",
-      title: "20% Off Burgers",
-      text: "Limited BRQ weekend deal",
+      title: t.offBurgers,
+      text: t.limitedDeal,
     },
     {
       icon: "fa-utensils",
-      title: "Combo Meal",
-      text: "Burger + fries + drink",
+      title: t.comboMeal,
+      text: t.comboText,
     },
   ];
 

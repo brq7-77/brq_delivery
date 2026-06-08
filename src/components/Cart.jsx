@@ -1,3 +1,5 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 export default function Cart({
   open,
   items,
@@ -7,7 +9,13 @@ export default function Cart({
   onRemove,
   onCheckout,
 }) {
-  const subtotal = items.reduce((total, item) => total + item.price * item.qty, 0);
+  const { t } = useLanguage();
+
+  const subtotal = items.reduce(
+    (total, item) => total + Number(item.price || 0) * Number(item.qty || 1),
+    0
+  );
+
   const delivery = items.length > 0 ? 2.5 : 0;
   const total = subtotal + delivery;
 
@@ -18,9 +26,10 @@ export default function Cart({
       <aside className={`cart-panel ${open ? "show" : ""}`}>
         <div className="cart-head">
           <div>
-            <p className="eyebrow">Your Order</p>
-            <h2>Cart</h2>
+            <p className="eyebrow">{t.yourOrder}</p>
+            <h2>{t.cart}</h2>
           </div>
+
           <button onClick={onClose}>
             <i className="fa-solid fa-xmark"></i>
           </button>
@@ -30,8 +39,8 @@ export default function Cart({
           {items.length === 0 ? (
             <div className="empty-cart">
               <i className="fa-solid fa-bag-shopping"></i>
-              <h3>Your cart is empty</h3>
-              <p>Add meals to start your order.</p>
+              <h3>{t.emptyCartTitle}</h3>
+              <p>{t.emptyCartText}</p>
             </div>
           ) : (
             items.map((item) => (
@@ -46,7 +55,7 @@ export default function Cart({
 
                 <div className="cart-item-info">
                   <h4>{item.name}</h4>
-                  <p>${item.price.toFixed(2)}</p>
+                  <p>${Number(item.price || 0).toFixed(2)}</p>
 
                   <div className="qty-row">
                     <button onClick={() => onDecrease(item.id)}>-</button>
@@ -65,15 +74,17 @@ export default function Cart({
 
         <div className="cart-summary">
           <div>
-            <span>Subtotal</span>
+            <span>{t.subtotal}</span>
             <strong>${subtotal.toFixed(2)}</strong>
           </div>
+
           <div>
-            <span>Delivery</span>
+            <span>{t.delivery}</span>
             <strong>${delivery.toFixed(2)}</strong>
           </div>
+
           <div className="total-row">
-            <span>Total</span>
+            <span>{t.total}</span>
             <strong>${total.toFixed(2)}</strong>
           </div>
 
@@ -81,9 +92,9 @@ export default function Cart({
             className="checkout-btn"
             disabled={items.length === 0}
             onClick={onCheckout}
-            >
-            Checkout <i className="fa-solid fa-arrow-right"></i>
-            </button>
+          >
+            {t.checkout} <i className="fa-solid fa-arrow-right"></i>
+          </button>
         </div>
       </aside>
     </>

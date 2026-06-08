@@ -1,4 +1,8 @@
+import { useLanguage } from "../i18n/LanguageContext";
+
 export default function ProductModal({ item, onClose, onAdd }) {
+  const { t } = useLanguage();
+
   if (!item) return null;
 
   return (
@@ -22,6 +26,7 @@ export default function ProductModal({ item, onClose, onAdd }) {
 
         <div className="modal-content">
           <p className="eyebrow">{item.category}</p>
+
           <h2>{item.name}</h2>
 
           <div className="modal-meta">
@@ -29,16 +34,17 @@ export default function ProductModal({ item, onClose, onAdd }) {
               <i className="fa-solid fa-star"></i>
               {item.rating}
             </span>
+
             <span>
               <i className="fa-solid fa-clock"></i>
-              25-35 min
+              {t.deliveryIn}
             </span>
           </div>
 
           <p>{item.description}</p>
 
           <div className="modal-bottom">
-            <strong>${item.price.toFixed(2)}</strong>
+            <strong>${Number(item.price || 0).toFixed(2)}</strong>
 
             <button
               onClick={() => {
@@ -47,7 +53,7 @@ export default function ProductModal({ item, onClose, onAdd }) {
               }}
             >
               <i className="fa-solid fa-plus"></i>
-              Add to cart
+              {t.addToCart}
             </button>
           </div>
         </div>

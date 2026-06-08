@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { validateCoupon } from "../api";
+import { useLanguage } from "../i18n/LanguageContext";
 import {
   notifyError,
   notifySuccess,
@@ -7,6 +8,8 @@ import {
 } from "../utils/notify";
 
 export default function Checkout({ open, items, orderType, onClose, onOrderPlaced }) {
+  const { t } = useLanguage();
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -33,14 +36,14 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
 
   async function applyCoupon() {
     if (!couponCode.trim()) {
-      notifyError("Please enter coupon code.");
+      notifyError(t.enterCouponCode);
       return;
     }
 
     const data = await validateCoupon(couponCode, subtotal, delivery);
 
     if (!data.success) {
-      notifyError(data.message || "Invalid coupon.");
+      notifyError(data.message || t.invalidCoupon);
       setAppliedCoupon(null);
       setDiscount(0);
       return;
@@ -59,7 +62,7 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
 
     setAppliedCoupon(coupon);
     setDiscount(calculatedDiscount);
-    notifySuccess("Coupon applied successfully");
+    notifySuccess(t.couponApplied);
   }
 
   function handleChange(e) {
@@ -70,7 +73,7 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
     e.preventDefault();
 
     if (!form.name || !form.phone || !form.address) {
-      notifyPrime("Please fill name, phone, and address.");
+      notifyPrime(t.fillRequiredFields);
       return;
     }
 
@@ -96,8 +99,8 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
       <section className="checkout-modal">
         <div className="checkout-head">
           <div>
-            <p className="eyebrow">Checkout</p>
-            <h2>Complete your order</h2>
+            <p className="eyebrow">{t.checkout}</p>
+            <h2>{t.completeOrder}</h2>
           </div>
 
           <button onClick={onClose}>
@@ -108,17 +111,17 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
         <form className="checkout-body" onSubmit={submitOrder}>
           <div className="checkout-form">
             <label>
-              Full Name
+              {t.fullName}
               <input
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Enter your name"
+                placeholder={t.enterYourName}
               />
             </label>
 
             <label>
-              Phone Number
+              {t.phoneNumber}
               <input
                 name="phone"
                 value={form.phone}
@@ -128,27 +131,27 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
             </label>
 
             <label>
-              Delivery Address
+              {t.deliveryAddress}
               <textarea
                 name="address"
                 value={form.address}
                 onChange={handleChange}
-                placeholder="City, street, building..."
+                placeholder={t.addressPlaceholder}
               />
             </label>
 
             <label>
-              Notes
+              {t.notes}
               <textarea
                 name="notes"
                 value={form.notes}
                 onChange={handleChange}
-                placeholder="Extra sauce, no onions..."
+                placeholder={t.notesPlaceholder}
               />
             </label>
 
             <div className="payment-box">
-              <p>Payment Method</p>
+              <p>{t.paymentMethod}</p>
 
               <div className="payment-options">
                 <button
@@ -157,7 +160,7 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
                   onClick={() => setForm({ ...form, payment: "cash" })}
                 >
                   <i className="fa-solid fa-money-bill"></i>
-                  Cash
+                  {t.cash}
                 </button>
 
                 <button
@@ -166,7 +169,7 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
                   onClick={() => setForm({ ...form, payment: "card" })}
                 >
                   <i className="fa-solid fa-credit-card"></i>
-                  Card
+                  {t.card}
                 </button>
               </div>
             </div>
@@ -180,17 +183,17 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
               />
 
               <div>
-                <p>Your Driver</p>
+                <p>{t.yourDriver}</p>
                 <h4>Michael Jordan</h4>
 
                 <span>
                   <i className="fa-solid fa-motorcycle"></i>
-                  Arriving in 25-35 min
+                  {t.arrivingIn}
                 </span>
               </div>
             </div>
 
-            <h3>Order Summary</h3>
+            <h3>{t.orderSummary}</h3>
 
             <div className="checkout-items">
               {items.map((item) => (
@@ -219,59 +222,59 @@ export default function Checkout({ open, items, orderType, onClose, onOrderPlace
 
             <div className="promo-box">
               <input
-                placeholder="Promo code"
+                placeholder={t.promoCode}
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
               />
 
               <button type="button" onClick={applyCoupon}>
-                Apply
+                {t.apply}
               </button>
             </div>
 
             {appliedCoupon && (
               <div className="coupon-applied">
                 <i className="fa-solid fa-ticket"></i>
-                {appliedCoupon.code} applied
+                {appliedCoupon.code} {t.applied}
               </div>
             )}
 
             <div className="checkout-totals">
               <div>
-                <span>Subtotal</span>
+                <span>{t.subtotal}</span>
                 <strong>${subtotal.toFixed(2)}</strong>
               </div>
 
               <div>
-                <span>Delivery</span>
+                <span>{t.delivery}</span>
                 <strong>${delivery.toFixed(2)}</strong>
               </div>
 
               <div>
-                <span>Taxes</span>
+                <span>{t.taxes}</span>
                 <strong>${taxes.toFixed(2)}</strong>
               </div>
 
               {safeDiscount > 0 && (
                 <div>
-                  <span>Discount</span>
+                  <span>{t.discount}</span>
                   <strong>-${safeDiscount.toFixed(2)}</strong>
                 </div>
               )}
 
               <div className="total-row">
-                <span>Total</span>
+                <span>{t.total}</span>
                 <strong>${total.toFixed(2)}</strong>
               </div>
             </div>
 
             <button className="place-order-btn" type="submit">
-              Place Order <i className="fa-solid fa-check"></i>
+              {t.placeOrder} <i className="fa-solid fa-check"></i>
             </button>
 
             <div className="secure-note">
               <i className="fa-solid fa-shield"></i>
-              Secure encrypted checkout
+              {t.secureCheckout}
             </div>
           </aside>
         </form>

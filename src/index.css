@@ -28,6 +28,10 @@ body {
   min-height: 100vh;
 }
 
+html[dir="rtl"] body {
+  font-family: "Cairo", sans-serif;
+}
+
 button {
   font-family: inherit;
   border: 0;
@@ -3183,4 +3187,287 @@ button:active {
 .image-placeholder i {
   font-size: 4rem;
   color: #7000ff;
+}
+
+.language-switcher {
+  display: flex;
+  gap: 8px;
+  margin-right: 16px;
+}
+
+.language-switcher button {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.language-switcher button:hover {
+  border-color: rgba(112,0,255,.5);
+}
+
+.language-switcher button.active {
+  background: #7000ff;
+  border-color: #7000ff;
+}
+
+/* =========================
+   RTL SUPPORT
+========================= */
+
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+/* Header */
+
+html[dir="rtl"] .brand,
+html[dir="rtl"] .nav,
+html[dir="rtl"] .hero-actions,
+html[dir="rtl"] .status-card,
+html[dir="rtl"] .deal-card,
+html[dir="rtl"] .tracking-driver,
+html[dir="rtl"] .delivery-preview {
+  flex-direction: row-reverse;
+}
+
+/* Section headers */
+
+html[dir="rtl"] .section-head,
+html[dir="rtl"] .admin-view-head,
+html[dir="rtl"] .admin-topbar,
+html[dir="rtl"] .checkout-head,
+html[dir="rtl"] .cart-head {
+  direction: rtl;
+}
+
+/* Sidebar */
+
+html[dir="rtl"] .admin-shell {
+  grid-template-columns: 1fr 290px;
+}
+
+html[dir="rtl"] .admin-sidebar {
+  border-right: none;
+  border-left: 1px solid var(--border);
+  order: 2;
+}
+
+html[dir="rtl"] .admin-content {
+  order: 1;
+}
+
+html[dir="rtl"] .admin-nav button,
+html[dir="rtl"] .admin-back-btn {
+  justify-content: flex-start;
+}
+
+/* Cart */
+
+html[dir="rtl"] .cart-panel {
+  right: auto;
+  left: 18px;
+  transform: translateX(calc(-100% - 30px));
+}
+
+html[dir="rtl"] .cart-panel.show {
+  transform: translateX(0);
+}
+
+html[dir="rtl"] .cart-item {
+  grid-template-columns: 42px 1fr 76px;
+}
+
+html[dir="rtl"] .remove-btn {
+  order: -1;
+}
+
+/* Checkout */
+
+html[dir="rtl"] .checkout-body {
+  direction: rtl;
+}
+
+html[dir="rtl"] .checkout-summary {
+  border-left: none;
+  border-right: 1px solid var(--border);
+}
+
+html[dir="rtl"] .checkout-item {
+  grid-template-columns: auto 1fr 58px;
+}
+
+html[dir="rtl"] .checkout-item img {
+  order: 3;
+}
+
+html[dir="rtl"] .checkout-item strong {
+  order: 1;
+}
+
+/* Product Modal */
+
+html[dir="rtl"] .product-modal {
+  direction: rtl;
+}
+
+html[dir="rtl"] .modal-close {
+  right: auto;
+  left: 18px;
+}
+
+/* Search */
+
+html[dir="rtl"] .search-box,
+html[dir="rtl"] .products-search,
+html[dir="rtl"] .products-filter {
+  flex-direction: row-reverse;
+}
+
+/* Orders */
+
+html[dir="rtl"] .order-top,
+html[dir="rtl"] .order-info p,
+html[dir="rtl"] .order-items div,
+html[dir="rtl"] .admin-row {
+  direction: rtl;
+}
+
+/* Visitors */
+
+html[dir="rtl"] .visitor-card {
+  flex-direction: row-reverse;
+}
+
+/* Forms */
+
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  text-align: right;
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+  html[dir="rtl"] .checkout-summary {
+    border-right: none;
+  }
+}
+
+/* Fix admin sidebar labels in RTL */
+
+html[dir="rtl"] .admin-nav button,
+html[dir="rtl"] .admin-back-btn {
+  direction: rtl;
+  justify-content: space-between;
+  text-align: right;
+}
+
+html[dir="rtl"] .admin-nav button i,
+html[dir="rtl"] .admin-back-btn i {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+html[dir="rtl"] .admin-sidebar {
+  width: 290px;
+  min-width: 290px;
+}
+
+html[dir="rtl"] .admin-nav button {
+  overflow: visible;
+  white-space: nowrap;
+}
+
+html[dir="rtl"] .admin-brand {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* RTL Admin Sidebar Fix */
+
+html[dir="rtl"] .admin-nav button,
+html[dir="rtl"] .admin-back-btn {
+  direction: rtl;
+  justify-content: flex-start !important;
+  text-align: right;
+  gap: 12px;
+}
+
+html[dir="rtl"] .admin-nav button i,
+html[dir="rtl"] .admin-back-btn i {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+html[dir="rtl"] .admin-nav button {
+  width: 100%;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+html[dir="rtl"] .admin-sidebar {
+  width: 290px;
+  min-width: 290px;
+}
+
+html[dir="rtl"] .admin-brand {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* Admin Sidebar RTL Fix */
+
+html[dir="rtl"] .admin-sidebar {
+  width: 290px !important;
+  min-width: 290px !important;
+}
+
+html[dir="rtl"] .admin-nav button {
+  justify-content: flex-start !important;
+  text-align: right !important;
+  gap: 12px !important;
+  padding: 0 18px !important;
+  color: #fff !important;
+}
+
+html[dir="rtl"] .admin-nav button i {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+html[dir="rtl"] .admin-back-btn {
+  justify-content: flex-start !important;
+  gap: 12px !important;
+}
+
+html[dir="rtl"] .admin-brand {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+html[dir="rtl"] body,
+html[dir="rtl"] button,
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select,
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6,
+html[dir="rtl"] p,
+html[dir="rtl"] span,
+html[dir="rtl"] label {
+  font-family: "Cairo", sans-serif !important;
 }

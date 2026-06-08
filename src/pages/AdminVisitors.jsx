@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { getVisitors } from "../api";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function AdminVisitors() {
+  const { t } = useLanguage();
   const [visitors, setVisitors] = useState([]);
 
   useEffect(() => {
@@ -20,8 +22,8 @@ export default function AdminVisitors() {
     <div className="admin-view">
       <div className="admin-view-head">
         <div>
-          <p className="eyebrow">Security</p>
-          <h1>Visitors Logs</h1>
+          <p className="eyebrow">{t.security}</p>
+          <h1>{t.visitorLogs}</h1>
         </div>
       </div>
 
@@ -29,15 +31,17 @@ export default function AdminVisitors() {
         <i className="fa-solid fa-shield-halved"></i>
 
         <span>
-          Real visitor logs collected from the backend system.
+          {t.realVisitorLogs}
         </span>
       </div>
 
       {visitors.length === 0 ? (
         <div className="admin-empty">
           <i className="fa-solid fa-user-shield"></i>
-          <h2>No visitors yet</h2>
-          <p>Visitors will appear here automatically.</p>
+
+          <h2>{t.noVisitorsYet}</h2>
+
+          <p>{t.visitorsAppearAutomatically}</p>
         </div>
       ) : (
         <div className="visitors-table">

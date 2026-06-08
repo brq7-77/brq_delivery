@@ -1,19 +1,36 @@
-export default function Header({ cartCount, onCartClick, onAdminClick, onTrackClick }) {  return (
+import { useLanguage } from "../i18n/LanguageContext";
+
+export default function Header({
+  cartCount,
+  onCartClick,
+  onAdminClick,
+  onTrackClick,
+}) {
+  const { language, changeLanguage, t } = useLanguage();
+
+  return (
     <header className="header">
       <div className="brand">
         <div className="brand-icon">
           <i className="fa-solid fa-bolt"></i>
         </div>
+
         <div>
           <h1>BRQ Delivery</h1>
-          <p>Fast food delivery system</p>
+          <p>{t.brandSubtitle}</p>
         </div>
       </div>
 
       <nav className="nav">
+        <div className="language-switcher">
+          <button className={language === "tr" ? "active" : ""} onClick={() => changeLanguage("tr")}>TR</button>
+          <button className={language === "en" ? "active" : ""} onClick={() => changeLanguage("en")}>EN</button>
+          <button className={language === "ar" ? "active" : ""} onClick={() => changeLanguage("ar")}>AR</button>
+        </div>
+
         <button className="nav-link" onClick={onTrackClick}>
           <i className="fa-solid fa-route"></i>
-          Track
+          {t.track}
         </button>
 
         <button className="cart-button" onClick={onCartClick}>
@@ -22,7 +39,7 @@ export default function Header({ cartCount, onCartClick, onAdminClick, onTrackCl
         </button>
 
         <button className="nav-link" onClick={onAdminClick}>
-          Admin
+          {t.admin}
         </button>
       </nav>
     </header>

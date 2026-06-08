@@ -16,6 +16,7 @@ import Deals from "./components/Deals";
 import AdminLogin from "./pages/AdminLogin";
 import RestaurantsSection from "./components/RestaurantsSection";
 import { getRestaurants } from "./api";
+import { useLanguage } from "./i18n/LanguageContext";
 
 import {
   createOrder,
@@ -26,6 +27,7 @@ import {
 } from "./api";
 
 export default function App() {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
@@ -124,7 +126,7 @@ export default function App() {
     const data = await createOrder(order);
 
     if (!data.success) {
-        toast.error("Failed to place order.");
+        toast.error(t.failedPlaceOrder);
         return;
     }
 
@@ -133,7 +135,7 @@ export default function App() {
     setOrders((prev) => [newOrder, ...prev]);
     setLatestOrder(newOrder);
 
-    toast.success("Order placed successfully!");
+    toast.success(t.orderPlacedSuccess);
 
     setCart([]);
     setCheckoutOpen(false);
@@ -201,7 +203,7 @@ export default function App() {
             if (latestOrder) {
                 setTrackingOpen(true);
             } else {
-                notifyError("No order to track yet.");
+                notifyError(t.noOrderToTrack);
             }
         }}
       />
@@ -224,10 +226,10 @@ export default function App() {
         <section className="menu-section" id="menu">
           <div className="section-head">
             <div>
-              <p className="eyebrow">Explore Menu</p>
-              <h2>{selectedRestaurant ? selectedRestaurant.name : "Select a restaurant"}</h2>
+              <p className="eyebrow">{t.exploreMenu}</p>
+              <h2>{selectedRestaurant ? selectedRestaurant.name : t.selectRestaurant}</h2>
             </div>
-            <span>{filteredItems.length} items</span>
+            <span>{filteredItems.length} {t.items}</span>
           </div>
 
           {selectedRestaurant && (
@@ -236,7 +238,7 @@ export default function App() {
                 onClick={() => setSelectedRestaurant(null)}
             >
                 <i className="fa-solid fa-arrow-left"></i>
-                Back to restaurants
+                {t.backToRestaurants}
             </button>
           )}
 
@@ -251,7 +253,7 @@ export default function App() {
                 <i className="fa-solid fa-magnifying-glass"></i>
                 <input
                 type="text"
-                placeholder="Search meals, drinks, burgers..."
+                placeholder={t.searchPlaceholder}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 />
@@ -261,8 +263,8 @@ export default function App() {
           {!selectedRestaurant ? (
             <div className="empty-menu-state">
                 <i className="fa-solid fa-store"></i>
-                <h3>Select a restaurant first</h3>
-                <p>Choose a restaurant to view its menu.</p>
+                <h3>{t.selectRestaurantFirst}</h3>
+                <p>{t.chooseRestaurantToViewMenu}</p>
             </div>
             ) : (
             <div className="products-grid">

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
+import { useLanguage } from "../i18n/LanguageContext";
 import toast from "react-hot-toast";
 
 export default function AdminLogin({ onLogin, onBack }) {
+  const { t } = useLanguage();
+
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,16 +15,12 @@ export default function AdminLogin({ onLogin, onBack }) {
     const cleanIdentifier = identifier.trim();
     const cleanPassword = password.trim();
 
-    console.log("LOGIN TRY:", cleanIdentifier, cleanPassword);
-
     const { data, error } = await supabase
       .from("supervisors")
       .select("*");
 
-    console.log("SUPERVISORS:", data, error);
-
     if (error) {
-      toast.error("Database error");
+      toast.error(t.databaseError);
       return;
     }
 
@@ -32,10 +31,8 @@ export default function AdminLogin({ onLogin, onBack }) {
         u.password === cleanPassword
     );
 
-    console.log("FOUND USER:", userRow);
-
     if (!userRow) {
-      toast.error("Wrong username or password");
+      toast.error(t.wrongLogin);
       return;
     }
 
@@ -51,7 +48,7 @@ export default function AdminLogin({ onLogin, onBack }) {
     localStorage.setItem("brq_admin_token", "supabase-local-token");
     localStorage.setItem("brq_admin_user", JSON.stringify(user));
 
-    toast.success("Welcome back commander");
+    toast.success(t.welcomeBack);
     onLogin(user);
   }
 
@@ -63,10 +60,10 @@ export default function AdminLogin({ onLogin, onBack }) {
         </div>
 
         <p className="eyebrow">BRQ Control Center</p>
-        <h1>Admin Login</h1>
+        <h1>{t.adminLogin}</h1>
 
         <label>
-          Email or Username
+          {t.emailOrUsername}
           <input
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
@@ -75,7 +72,7 @@ export default function AdminLogin({ onLogin, onBack }) {
         </label>
 
         <label>
-          Password
+          {t.password}
           <input
             type="password"
             value={password}
@@ -86,12 +83,12 @@ export default function AdminLogin({ onLogin, onBack }) {
 
         <button type="submit">
           <i className="fa-solid fa-right-to-bracket"></i>
-          Login
+          {t.login}
         </button>
 
         <button type="button" className="login-back" onClick={onBack}>
           <i className="fa-solid fa-arrow-left"></i>
-          Back to Store
+          {t.backToStore}
         </button>
       </form>
     </main>
